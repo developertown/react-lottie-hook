@@ -1,0 +1,15 @@
+  
+root = true
+
+[*]
+indent_size = 2
+max_line_length = 120
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+ij_typescript_force_quote_style = true
+ij_typescript_import_sort_module_name = true
+ij_typescript_import_sort_members = true
