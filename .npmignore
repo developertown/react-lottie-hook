@@ -1,0 +1,11 @@
+/src
+/coverage
+/node_modules
+.editorconfig
+.eslintrc.js
+.prettierignore
+.prettierrc
+jest.config.js
+rollup.config.js
+setupTests.ts
+tsconfig.json
