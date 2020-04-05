@@ -17,6 +17,7 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.cjs.d.ts",
+  "source": "src/index.ts",
   "scripts": {
     "build": "rollup -c rollup.config.js",
     "dev": "yarn build --watch",
@@ -28,7 +29,6 @@
     "clean": "rm -rf ./dist"
   },
   "files": [
-    "src",
     "dist"
   ],
   "peerDependencies": {
