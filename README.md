@@ -1,4 +1,4 @@
-# react-lottie-hook
+# react-lottie-hook &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/static/v1?label=npm&message=v0.0.1&color=informational)](https://www.npmjs.com/package/react-lottie-hook)
 
 Lottie react hook with runtime animation controls.
 
