@@ -59,22 +59,9 @@ export const useLottie = ({
     [renderer, loop, autoplay, rendererSettings, internalAnimationData],
   );
 
-  const update = (update: Partial<LottieState>) => dispatch((state) => ({ ...state, ...update }));
-
-  useEffect(() => {
-    const anim = lottie.loadAnimation(animationConfig(lottieRef.current as HTMLElement));
-    setAnimation(anim as LottieAnimationItem);
-
-    if (props.eventListeners) registerEvents(props.eventListeners);
-
-    return () => {
-      if (animation && animation.destroy) animation.destroy();
-      setAnimation(undefined);
-      if (props.eventListeners) deRegisterEvents(props.eventListeners);
-      controls.destroy();
-      update({ animationData: {} });
-    };
-  }, []);
+  const update = (update: Partial<LottieState>): void => {
+    dispatch((state) => ({ ...state, ...update }));
+  };
 
   const controls: AnimationDispatch = {
     ...animation,
@@ -128,6 +115,21 @@ export const useLottie = ({
       [animation],
     ),
   };
+
+  useEffect(() => {
+    const anim = lottie.loadAnimation(animationConfig(lottieRef.current as HTMLElement));
+    setAnimation(anim as LottieAnimationItem);
+
+    if (props.eventListeners) registerEvents(props.eventListeners);
+
+    return (): void => {
+      if (animation && animation.destroy) animation.destroy();
+      setAnimation(undefined);
+      if (props.eventListeners) deRegisterEvents(props.eventListeners);
+      controls.destroy();
+      update({ animationData: {} });
+    };
+  }, []);
 
   useEffect(() => {
     if (internalAnimationData !== state.animationData) {
