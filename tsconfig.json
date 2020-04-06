@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
     "jsx": "react",
+    "outDir": "dist",
     "target": "es2019",
     "module": "esnext",
-    "declaration": true,
-    "declarationDir": "dist",
     "strict": true,
-    "noEmit": true,
     "allowJs": true,
+    "declaration": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
