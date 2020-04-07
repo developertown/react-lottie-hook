@@ -1,17 +1,32 @@
-import { render, act, fireEvent } from "@testing-library/react";
+import { render, act, fireEvent, RenderResult } from "@testing-library/react";
 import React from "react";
 import { Lottie } from "../Lottie";
+import { LottieProps } from "../../dist/index.cjs";
 
 const spyOnClick = jest.fn();
 
-const Component = ({ options = {} }) => {
+interface Props {
+  options: Omit<LottieProps, "lottieRef">;
+}
+
+const Component: React.FC<Props> = ({ options = {} }) => {
   const lottieRef = React.useRef(null);
   return <Lottie lottieRef={lottieRef} width={200} height={200} {...options} />;
 };
 
-const customRender = ({ title, ref }: any) => {
-  
-  const result = render(<Lottie lottieRef={ref} width={200} height={200} title={title} />);
+interface CustomRender {
+  title: string;
+  ref: React.MutableRefObject<HTMLElement | null> | null;
+}
+
+interface CustromRenderResult extends RenderResult {
+  lottieRef: React.MutableRefObject<HTMLElement | null> | null;
+}
+
+const customRender = ({ title, ref }: CustomRender): CustromRenderResult => {
+  const result = render(
+    <Lottie lottieRef={ref as React.MutableRefObject<HTMLElement | null>} width={200} height={200} title={title} />,
+  );
   return {
     ...result,
     lottieRef: ref,
@@ -83,8 +98,8 @@ describe("Lottie", () => {
 
     it("missing lottieRef triggers error", () => {
       const title = "dimension-test";
-      const error = new Error("Lottie component requires a valid ref but got: null")
-      const renderer = () => customRender({ title, ref: null });
+      const error = new Error("Lottie component requires a valid ref but got: null");
+      const renderer = (): CustromRenderResult => customRender({ title, ref: null });
       expect(renderer).toThrow(error);
     });
   });

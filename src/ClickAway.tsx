@@ -7,7 +7,7 @@ import useForkRef from "./utils/useForkRef";
 import useEventCallback from "./utils/useEventCallback";
 import { ClickAwayProps } from "./types";
 
-function mapEventPropToEvent(eventProp: string) {
+function mapEventPropToEvent(eventProp: string): string {
   return eventProp.substring(2).toLowerCase();
 }
 
@@ -20,7 +20,7 @@ export const ClickAway = React.forwardRef<unknown, ClickAwayProps>(
 
     React.useEffect(() => {
       mountedRef.current = true;
-      return () => {
+      return (): void => {
         mountedRef.current = false;
       };
     }, []);
