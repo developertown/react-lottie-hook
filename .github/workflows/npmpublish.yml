@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
+      - run: cd ./react-lottie-hook
       - run: yarn install --frozen-lockfile
       - run: yarn test
 
@@ -27,6 +28,7 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
+      - run: cd ./react-lottie-hook
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: yarn publish --access public

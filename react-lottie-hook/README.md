@@ -1,6 +1,6 @@
 # react-lottie-hook
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/static/v1?label=npm&message=v0.0.5&color=informational)](https://www.npmjs.com/package/react-lottie-hook) [![React Version](https://img.shields.io/static/v1?label=react&message=^16.8.0&color=informational)](https://github.com/facebook/react/blob/master/CHANGELOG.md) ![CI](https://github.com/developertown/react-lottie-hook/workflows/Continuous%20Integration/badge.svg?branch=master)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/facebook/react/blob/master/LICENSE) [![npm version](https://img.shields.io/static/v1?label=npm&message=v0.1.0&color=informational)](https://www.npmjs.com/package/react-lottie-hook) [![React Version](https://img.shields.io/static/v1?label=react&message=>=16.8.0&color=informational)](https://github.com/facebook/react/blob/master/CHANGELOG.md) ![CI](https://github.com/developertown/react-lottie-hook/workflows/Continuous%20Integration/badge.svg?branch=master)
 
 Lottie react hook with runtime animation controls.
 
@@ -36,10 +36,10 @@ const App = () => {
       preserveAspectRatio: "xMidYMid slice",
       progressiveLoad: false,
     },
-    animationData
-  })
+    animationData,
+  });
   
-  return <Lottie lottieRef={ref} width={400} height={400} />
+  return <Lottie lottieRef={ref} width={400} height={400} />;
 }
 ```
 
@@ -60,4 +60,32 @@ Lottie Component props:
 | onKeyDown? | (e: React.KeyboardEvent) => void | |
 | onClick? | (e: React.MouseEvent<HTMLElement, MouseEvent>) | |
 
-✨  Enjoy!
+
+--------------------------------
+EventListeners:
+--------------------
+
+Among the options you can pass `useLottie` is an `eventListeners` object as follows:
+
+```javascript
+const eventListeners: EventLisener = {
+  /** triggered only if loop is set to true */
+  loopCompleted: (data) => { console.log('Animation Loop Completed'); },
+  /** triggered when animation is destroyed */
+  destroy: : (data) => { console.log('Animation Destroyed'); },
+  /** triggered when loop is set to false */
+  complete: (data) => { console.log('Animation Complete'); },
+};
+
+const [lottieRef, { isPaused, isStopped }, controls] = useLottie({
+  renderer: "svg",
+  loop: false, // default true
+  rendererSettings: {
+    preserveAspectRatio: "xMidYMid slice",
+    progressiveLoad: false,
+  },
+  animationData,
+  eventListeners,
+});
+
+```

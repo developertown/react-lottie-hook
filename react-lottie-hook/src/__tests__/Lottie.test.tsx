@@ -1,7 +1,7 @@
 import { render, act, fireEvent, RenderResult } from "@testing-library/react";
 import React from "react";
 import { Lottie } from "../Lottie";
-import { LottieProps } from "../../dist/index.cjs";
+import { LottieProps } from "../types";
 
 const spyOnClick = jest.fn();
 
@@ -9,7 +9,7 @@ interface Props {
   options: Omit<LottieProps, "lottieRef">;
 }
 
-const Component: React.FC<Props> = ({ options = {} }) => {
+export const Component: React.FC<Props> = ({ options = {} }) => {
   const lottieRef = React.useRef(null);
   return <Lottie lottieRef={lottieRef} width={200} height={200} {...options} />;
 };
@@ -35,6 +35,9 @@ const customRender = ({ title, ref }: CustomRender): CustromRenderResult => {
 
 describe("Lottie", () => {
   describe("props", () => {
+    beforeEach(() => {
+      console.error = jest.fn();
+    });
     it("sets ariaLabel, ariaRole and title propertly", () => {
       const options = {
         ariaLabel: "test-label",
@@ -101,6 +104,8 @@ describe("Lottie", () => {
       const error = new Error("Lottie component requires a valid ref but got: null");
       const renderer = (): CustromRenderResult => customRender({ title, ref: null });
       expect(renderer).toThrow(error);
+      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledTimes(2);
     });
   });
 });
