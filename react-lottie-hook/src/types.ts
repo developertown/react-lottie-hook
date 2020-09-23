@@ -14,7 +14,7 @@ export interface LottieProps {
   lottieRef: React.MutableRefObject<HTMLElement | null>;
   width?: number;
   height?: number;
-  style?: object;
+  style?: React.CSSProperties;
   title?: string;
   className?: string;
   ariaRole?: string;
@@ -68,6 +68,8 @@ export enum Renderer {
   canvas = "canvas",
 }
 
+export type AnimationData = AnimationConfigWithPath | AnimationConfigWithData | Record<string, unknown>;
+
 export interface LottieConfig extends Omit<AnimationConfig, "container"> {
   title?: string;
   options?: LottieOptions;
@@ -75,7 +77,7 @@ export interface LottieConfig extends Omit<AnimationConfig, "container"> {
   direction?: 1 | -1 | number;
   speed?: number;
   segments?: AnimationSegment | AnimationSegment[];
-  animationData?: AnimationConfigWithPath | AnimationConfigWithData | {};
+  animationData?: AnimationData;
 }
 
 // eslint-disable-next-line
@@ -98,7 +100,7 @@ export type EventListener<T = any> = {
 };
 
 export interface LottieState {
-  animationData: AnimationConfigWithPath | AnimationConfigWithData | {};
+  animationData: AnimationData;
   isStopped: boolean;
   isPaused: boolean;
   isLoaded: boolean;

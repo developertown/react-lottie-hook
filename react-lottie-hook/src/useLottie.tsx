@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import lottie, { AnimationConfigWithData, AnimationItem, AnimationEventName } from "lottie-web";
 import {
   LottieAnimationItem,
@@ -51,19 +51,18 @@ export const useLottie = ({
           anim?.addEventListener<AnimationEventTypes>(eventName as AnimationEventName, callback);
         }
       });
-      return anim;
     },
     [hasOwnProperty],
   );
 
   const deRegisterEvents = useCallback(
     (anim: AnimationItem, eventListeners: EventListener) => {
+      if (!object.isPopulated(eventListeners)) return;
       Object.entries(eventListeners).forEach(([eventName, callback]) => {
         if (hasOwnProperty(anim, "removeEventListener")) {
           anim?.removeEventListener<AnimationEventTypes>(eventName as AnimationEventName, callback);
         }
       });
-      return anim;
     },
     [hasOwnProperty],
   );
@@ -84,72 +83,87 @@ export const useLottie = ({
     dispatch((state) => ({ ...state, ...update }));
   };
 
-  const controls: AnimationDispatch = {
-    ...animation,
-    play: useCallback(() => {
-      if (hasOwnProperty(animation as LottieAnimationItem, "play")) {
-        animation?.play();
-        update({
-          isPaused: false,
-          isStopped: false,
-        });
-      }
-    }, [animation, hasOwnProperty]),
-    playSegments: useCallback(
-      (newSegments, forceFlag = true) => {
-        if (hasOwnProperty(animation as LottieAnimationItem, "playSegments")) {
-          animation?.playSegments(newSegments || segments, forceFlag);
-        }
-      },
-      [animation, segments, hasOwnProperty],
-    ),
-    stop: useCallback(() => {
-      if (hasOwnProperty(animation as LottieAnimationItem, "stop")) {
-        animation?.stop();
-        update({
-          isStopped: true,
-          isPaused: true,
-        });
-      }
-    }, [animation, hasOwnProperty]),
-    pause: useCallback(() => {
-      if (hasOwnProperty(animation as LottieAnimationItem, "pause")) {
-        animation?.pause();
-        update({ isPaused: true });
-      }
-    }, [animation, hasOwnProperty]),
-    destroy: useCallback(() => {
-      if (hasOwnProperty(animation as LottieAnimationItem, "destroy")) {
-        animation?.destroy();
-      }
-    }, [animation, hasOwnProperty]),
-    selectAnimation: useCallback(
-      (newAnimation) => {
-        if (object.isPopulated(animation) && object.isPopulated(newAnimation)) {
-          update({
-            isStopped: false,
-            isPaused: false,
-            animationData: newAnimation,
-          });
-        }
-      },
-      [animation],
-    ),
-  };
-
-  useEffect(() => {
-    let anim: AnimationItem = lottie.loadAnimation(animationConfig(lottieRef.current as HTMLElement));
-
-    if (object.isPopulated(eventListeners)) {
-      anim = registerEvents(anim, eventListeners) as AnimationItem;
+  const play = useCallback(() => {
+    if (hasOwnProperty(animation as LottieAnimationItem, "play")) {
+      animation?.play();
+      update({
+        isPaused: false,
+        isStopped: false,
+      });
     }
+  }, [animation, hasOwnProperty]);
+
+  const playSegments = useCallback(
+    (newSegments, forceFlag = true) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "playSegments")) {
+        animation?.playSegments(newSegments || segments, forceFlag);
+      }
+    },
+    [animation, segments, hasOwnProperty],
+  );
+
+  const stop = useCallback(() => {
+    if (hasOwnProperty(animation as LottieAnimationItem, "stop")) {
+      animation?.stop();
+      update({
+        isStopped: true,
+        isPaused: true,
+      });
+    }
+  }, [animation, hasOwnProperty]);
+
+  const pause = useCallback(() => {
+    if (hasOwnProperty(animation as LottieAnimationItem, "pause")) {
+      animation?.pause();
+      update({ isPaused: true });
+    }
+  }, [animation, hasOwnProperty]);
+
+  const destroy = useCallback(() => {
+    if (hasOwnProperty(animation as LottieAnimationItem, "destroy")) {
+      animation?.destroy();
+    }
+  }, [animation, hasOwnProperty]);
+
+  const selectAnimation = useCallback(
+    (newAnimation) => {
+      if (object.isPopulated(animation) && object.isPopulated(newAnimation)) {
+        update({
+          isStopped: false,
+          isPaused: false,
+          animationData: newAnimation,
+        });
+      }
+    },
+    [animation],
+  );
+
+  const controls: AnimationDispatch = useMemo(
+    () => ({
+      ...animation,
+      play,
+      playSegments,
+      stop,
+      pause,
+      destroy,
+      selectAnimation,
+    }),
+    [animation, play, playSegments, stop, pause, destroy, selectAnimation],
+  );
+
+  /** component did mount: */
+  useEffect(() => {
+    const anim = lottie.loadAnimation(animationConfig(lottieRef.current as HTMLElement)) as LottieAnimationItem;
+
+    registerEvents(anim, eventListeners);
 
     update({ isLoaded: anim.isLoaded, isPaused: anim.isPaused });
-    setAnimation(anim as LottieAnimationItem);
+    setAnimation(anim);
 
+    /** component will unmount: */
     return (): void => {
       if (hasOwnProperty(animation as LottieAnimationItem, "destroy")) animation?.destroy();
-      if (object.isPopulated(eventListeners)) deRegisterEvents(animation as LottieAnimationItem, eventListeners);
+      deRegisterEvents(animation as LottieAnimationItem, eventListeners);
       controls.destroy();
       setAnimation(undefined);
       update({ animationData: {} });
@@ -157,13 +171,15 @@ export const useLottie = ({
     // eslint-disable-next-line
   }, []);
 
+  /** component did update */
   useEffect(() => {
+    // When the animation object is changed:
     if (internalAnimationData !== state.animationData) {
-      if (object.isPopulated(eventListeners)) deRegisterEvents(animation as LottieAnimationItem, eventListeners);
+      deRegisterEvents(animation as LottieAnimationItem, eventListeners);
       controls.destroy();
 
-      // TODO: use animationConfig
       const newOptions = {
+        ...animationConfig(lottieRef.current as HTMLElement),
         renderer,
         loop,
         autoplay,
@@ -171,15 +187,12 @@ export const useLottie = ({
         animationData: state.animationData,
       };
 
+      const anim = lottie.loadAnimation(newOptions) as LottieAnimationItem;
+
+      registerEvents(anim, eventListeners);
+
       setInternalAnimationData(state.animationData);
-      const anim = lottie.loadAnimation({
-        ...animationConfig(lottieRef.current as HTMLElement),
-        ...newOptions,
-      });
-
-      if (object.isPopulated(eventListeners)) registerEvents(anim as LottieAnimationItem, eventListeners);
-
-      setAnimation(anim as LottieAnimationItem);
+      setAnimation(anim);
     }
   }, [
     animation,
