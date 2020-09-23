@@ -25,7 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn install --frozen-lockfile
-    - run: yarn build
-    - run: npm test --coverage
+    - run: cd ./react-lottie-hook && yarn build
+    - run: cd ./react-lottie-hook && npm test --coverage
       env:
         CI: true
