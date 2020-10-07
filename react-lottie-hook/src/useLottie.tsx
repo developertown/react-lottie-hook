@@ -158,7 +158,7 @@ export const useLottie = ({
       selectAnimation,
       setDirection,
     }),
-    [animation, play, playSegments, stop, pause, destroy, selectAnimation],
+    [animation, play, playSegments, stop, pause, destroy, selectAnimation, setDirection],
   );
 
   /** component did mount: */
