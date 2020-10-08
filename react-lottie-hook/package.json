@@ -1,6 +1,6 @@
 {
   "name": "react-lottie-hook",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "React Lottie written with react hooks",
   "keywords": [
@@ -30,6 +30,9 @@
   },
   "files": [
     "dist"
+  ],
+  "contributors": [
+    "Arno (H) Welgemoed <arno.welgemoed@outlook.com> (ahwelgemoed.dev)"
   ],
   "peerDependencies": {
     "react": ">= 16.8.0",
