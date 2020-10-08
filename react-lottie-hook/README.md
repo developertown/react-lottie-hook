@@ -89,3 +89,20 @@ const [lottieRef, { isPaused, isStopped }, controls] = useLottie({
 });
 
 ```
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/JaysQubeXon"><img src="https://avatars1.githubusercontent.com/u/18309230?v=4" width="100px;" alt=""/><br /><sub><b>Noam Gabriel Jacobson</b></sub></a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/abillingsley"><img src="https://avatars2.githubusercontent.com/u/1089907?s=400&u=425b74a95749d8831befd8b33f10b7b2eb355d23&v=4" width="100px;" alt=""/><br /><sub><b>Alex Billingsley</b></sub></a>
+    </td>
+    <td>
+      <a href="https://github.com/ahwelgemoed"><img src="https://avatars1.githubusercontent.com/u/29273599?s=400&v=4" width="100px;" alt=""/><br /><sub><b>Arno (H) Welgemoed</b></sub></a>
+    </td>
+  </tr>
+</table>
