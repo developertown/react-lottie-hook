@@ -38,14 +38,21 @@ export interface LottieAnimationItem extends AnimationItem {
   isStopped: boolean;
 }
 
+export interface UseLottieState {
+  isStopped: boolean;
+  isPaused: boolean;
+  isLoaded: boolean;
+  playDirection: number;
+}
+
 export interface AnimationDispatch {
   play(): void;
   stop(): void;
   pause(): void;
   destroy(): void;
   selectAnimation: (newAnimation: AnimationConfigWithPath | AnimationConfigWithData) => void;
+  setDirection(direction: AnimationDirection): void;
   setSpeed?(speed?: number): void;
-  setDirection?(direction: AnimationDirection): void;
   resize?(): void;
   goToAndPlay?(value: number, isFrame?: boolean): void;
   goToAndStop?(value: number, isFrame?: boolean): void;
@@ -104,6 +111,7 @@ export interface LottieState {
   isStopped: boolean;
   isPaused: boolean;
   isLoaded: boolean;
+  playDirection: AnimationDirection;
 }
 
 type BMEventType<T = string> = {
