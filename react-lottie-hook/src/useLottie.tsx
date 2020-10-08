@@ -125,6 +125,15 @@ export const useLottie = ({
     }
   }, [animation, hasOwnProperty]);
 
+  const setDirection = useCallback(
+    (direction = 1) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "setDirection")) {
+        animation?.setDirection(direction);
+      }
+    },
+    [animation, hasOwnProperty],
+  );
+
   const selectAnimation = useCallback(
     (newAnimation) => {
       if (object.isPopulated(animation) && object.isPopulated(newAnimation)) {
@@ -147,8 +156,9 @@ export const useLottie = ({
       pause,
       destroy,
       selectAnimation,
+      setDirection,
     }),
-    [animation, play, playSegments, stop, pause, destroy, selectAnimation],
+    [animation, play, playSegments, stop, pause, destroy, selectAnimation, setDirection],
   );
 
   /** component did mount: */
