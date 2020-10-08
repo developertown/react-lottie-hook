@@ -60,6 +60,10 @@ const App = () => {
     }
   }, [state.isPaused, controls, clicked]);
 
+  const toggleAnimationDirection = useCallback(() => {
+    controls.setDirection(state.playDirection === 1 ? -1 : 1);
+  }, [controls, state.playDirection])
+
   return (
     <div className="App">
       <h1>
@@ -85,6 +89,7 @@ const App = () => {
           <Button title="pause" onClick={onPause} />
         )}
       </div>
+      <Button title='toggle direction' onClick={toggleAnimationDirection}  style={{ width: '12rem' }}/>
       <Select onChange={onSelect} value={selected} animations={animations} />
     </div>
   );
@@ -111,12 +116,14 @@ const Select: React.FC<SelectProps> = ({ onChange, value, animations }) => {
 interface ButtonProps {
   onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   title: string;
+  style?: React.CSSProperties;
 }
 
-const Button: React.FC<ButtonProps> = ({ onClick, title }) => {
+const Button: React.FC<ButtonProps> = ({ onClick, title, style }) => {
   const buttonStyle = {
     display: "block",
     margin: "10px auto",
+    ...(style ? style : {}),
   };
   return (
     <button className="controls-button" style={buttonStyle} onClick={onClick}>
