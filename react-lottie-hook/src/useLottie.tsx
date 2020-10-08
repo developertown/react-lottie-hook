@@ -8,6 +8,7 @@ import {
   LottieState,
   Renderer,
   AnimationEventTypes,
+  UseLottieState,
 } from "./types";
 import { object } from "./utils/common";
 
@@ -19,15 +20,7 @@ export const useLottie = ({
   segments = [],
   animationData = {},
   eventListeners = {},
-}: LottieConfig): [
-  React.MutableRefObject<HTMLDivElement | null>,
-  {
-    isStopped: boolean;
-    isPaused: boolean;
-    isLoaded: boolean;
-  },
-  AnimationDispatch,
-] => {
+}: LottieConfig): [React.MutableRefObject<HTMLDivElement | null>, UseLottieState, AnimationDispatch] => {
   const [animation, setAnimation] = useState<LottieAnimationItem | undefined>(undefined);
   const lottieRef = React.useRef<HTMLDivElement>(null);
   const [internalAnimationData, setInternalAnimationData] = useState(animationData);
@@ -36,6 +29,7 @@ export const useLottie = ({
     isStopped: false,
     isPaused: false,
     isLoaded: false,
+    playDirection: 1,
   });
 
   const hasOwnProperty = useCallback(
@@ -129,6 +123,7 @@ export const useLottie = ({
     (direction = 1) => {
       if (hasOwnProperty(animation as LottieAnimationItem, "setDirection")) {
         animation?.setDirection(direction);
+        update({ playDirection: direction });
       }
     },
     [animation, hasOwnProperty],
@@ -155,13 +150,12 @@ export const useLottie = ({
       stop,
       pause,
       destroy,
-      selectAnimation,
       setDirection,
+      selectAnimation,
     }),
-    [animation, play, playSegments, stop, pause, destroy, selectAnimation, setDirection],
+    [animation, play, playSegments, stop, pause, destroy, setDirection, selectAnimation],
   );
 
-  /** component did mount: */
   useEffect(() => {
     const anim = lottie.loadAnimation(animationConfig(lottieRef.current as HTMLElement)) as LottieAnimationItem;
 
@@ -170,7 +164,6 @@ export const useLottie = ({
     update({ isLoaded: anim.isLoaded, isPaused: anim.isPaused });
     setAnimation(anim);
 
-    /** component will unmount: */
     return (): void => {
       if (hasOwnProperty(animation as LottieAnimationItem, "destroy")) animation?.destroy();
       deRegisterEvents(animation as LottieAnimationItem, eventListeners);
@@ -181,7 +174,6 @@ export const useLottie = ({
     // eslint-disable-next-line
   }, []);
 
-  /** component did update */
   useEffect(() => {
     // When the animation object is changed:
     if (internalAnimationData !== state.animationData) {
@@ -220,7 +212,7 @@ export const useLottie = ({
     loop,
   ]);
 
-  const { isStopped, isPaused, isLoaded } = state;
+  const { isStopped, isPaused, isLoaded, playDirection } = state;
 
   return [
     lottieRef,
@@ -228,6 +220,7 @@ export const useLottie = ({
       isStopped,
       isPaused,
       isLoaded,
+      playDirection,
     },
     controls,
   ];
