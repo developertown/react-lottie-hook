@@ -38,27 +38,100 @@ export interface LottieAnimationItem extends AnimationItem {
   isStopped: boolean;
 }
 
+enum AnimType {
+  svg,
+  canvas,
+  html,
+}
+
+type AnimTypes = AnimType.svg | AnimType.canvas | AnimType.html;
+
+type Layer = {
+  ddd: number;
+  ind: number;
+  ty: number;
+  nm: string;
+  parent?: number;
+  ks: { [key: string]: any };
+  op: number;
+  ip: number;
+  bm: number;
+  ao: number;
+  st: number;
+  sr: number;
+  shapes: any[];
+  completed: boolean;
+};
+
+interface Asset {
+  id: string;
+  layers: Layer[];
+}
+
 export interface UseLottieState {
-  isStopped: boolean;
-  isPaused: boolean;
-  isLoaded: boolean;
-  playDirection: number;
+  animType?: AnimTypes;
+  animationID?: string;
+  assets?: Asset[];
+  assetsPath?: string;
+  autoloadSegments?: boolean;
+  audioController?: AudioController;
+  autoplay?: boolean;
+  currentFrame?: number;
+  currentRawFrame?: number;
+  firstFrame?: number;
+  frameModifier?: number;
+  frameMult?: number;
+  frameRate?: number;
+  imagePreloader?: ImagePreloader;
+  initialSegment?: number;
+  isPaused?: boolean;
+  isLoaded?: boolean;
+  isSubframeEnabled?: boolean;
+  loop?: number | boolean;
+  name?: string;
+  path?: string;
+  playCount?: number;
+  playDirection?: AnimationDirection;
+  playSpeed?: number;
+  segmentPos?: number;
+  segments?: number[] | AnimationSegment | AnimationSegment[];
+  timeCompleted?: number;
+  totalFrames?: number;
+  isStopped?: boolean;
+}
+
+interface ImagePreloader {
+  assetsPath: string;
+  images: any[];
+  imagesLoadedCb: () => void;
+  loadedAssets: number;
+  path: string;
+  totalImages: number;
+  _createImageData: () => void;
+  _imageLoaded: () => void;
+}
+
+interface AudioController {
+  audios: any[];
+  audioFactory: () => void | undefined;
+  _volume: number;
+  _isMuted: boolean;
 }
 
 export interface AnimationDispatch {
   play(): void;
   stop(): void;
   pause(): void;
+  resize(): void;
   destroy(): void;
-  selectAnimation: (newAnimation: AnimationConfigWithPath | AnimationConfigWithData) => void;
+  setSpeed(speed: number): void;
   setDirection(direction: AnimationDirection): void;
-  setSpeed?(speed?: number): void;
-  resize?(): void;
-  goToAndPlay?(value: number, isFrame?: boolean): void;
-  goToAndStop?(value: number, isFrame?: boolean): void;
-  playSegments?(segments: AnimationSegment | AnimationSegment[], forceFlag?: boolean): void;
-  setSubframe?(useSubFrames: boolean): void;
-  getDuration?(inFrames?: boolean): number;
+  playSegments(segments: AnimationSegment | AnimationSegment[], forceFlag?: boolean): void;
+  selectAnimation: (newAnimation: AnimationConfigWithPath | AnimationConfigWithData) => void;
+  goToAndPlay(value: number, isFrame?: boolean): void;
+  goToAndStop(value: number, isFrame?: boolean): void;
+  setSubframe(useSubFrames: boolean): void;
+  getDuration(inFrames?: boolean): number;
   // eslint-disable-next-line
   addEventListener?<T = AnimationEventTypes>(name: AnimationEventName, callback: AnimationEventCallback<T>): void;
   // eslint-disable-next-line
@@ -106,12 +179,8 @@ export type EventListener<T = any> = {
   loaded_images?: AnimationEventCallback<T>;
 };
 
-export interface LottieState {
+export interface LottieState extends UseLottieState {
   animationData: AnimationData;
-  isStopped: boolean;
-  isPaused: boolean;
-  isLoaded: boolean;
-  playDirection: AnimationDirection;
 }
 
 type BMEventType<T = string> = {
