@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, MouseEvent } from "react";
 import { useLottie, Lottie, ClickAway, EventListener } from "react-lottie-hook";
 import {
   animationTable,
@@ -7,11 +7,17 @@ import {
   animations,
 } from "./animations";
 import "./App.css";
+import Button from "./components/Button";
+import SelectAnimations from './components/SelectAnimations';
 
 const App = () => {
   const [clicked, setClicked] = useState<boolean>(false);
-  const [animationData] = useState(animationTable[Animation["Hallowin Cat"]] as any);
-  const [selected, setOnSelect] = useState<AnimationTitle>(Animation["Hallowin Cat"]);
+  const [animationData] = useState(
+    animationTable[Animation["Hallowin Cat"]] as any
+  );
+  const [selected, setOnSelect] = useState<AnimationTitle>(
+    Animation["Hallowin Cat"]
+  );
 
   const eventListeners: EventListener = {
     loopComplete: (data) => console.log("loop completed successfully", data),
@@ -28,9 +34,6 @@ const App = () => {
     eventListeners,
   });
 
-  console.log("controls", controls);
-  console.log("state", state);
-
   const onPlay = useCallback(() => {
     controls.play();
   }, [controls]);
@@ -43,11 +46,10 @@ const App = () => {
     controls.stop();
   }, [controls]);
 
-  const onSelect = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const onSelect = useCallback((value: AnimationTitle) =>
+    (e: React.MouseEvent) => {
       e.preventDefault();
       e.persist();
-      const value = e.target.value as AnimationTitle;
       setOnSelect(value);
       controls.selectAnimation(animationTable[value] as any);
     },
@@ -95,7 +97,7 @@ const App = () => {
 
   const getDuration = useCallback(() => {
     const duration = controls.getDuration(true);
-    console.log('animation duration', duration);
+    console.log("animation duration", duration);
   }, [controls]);
 
   return (
@@ -140,48 +142,11 @@ const App = () => {
 
       <Button title="resize" onClick={resize} />
       <Button title="Jump to 100" onClick={goToAndPlay} />
-      <Button title="Jump to 180" onClick={goToAndStop} />
+      <Button title="Jump to 180 and stop" onClick={goToAndStop} />
       <Button title="use sub frames" onClick={setSubframe} />
       <Button title="get duration" onClick={getDuration} />
-      <Select onChange={onSelect} value={selected} animations={animations} />
+      <SelectAnimations onClick={onSelect} value={selected} animations={animations} />
     </div>
-  );
-};
-
-interface SelectProps {
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  value: string;
-  animations: { id: number; title: string }[];
-}
-
-const Select: React.FC<SelectProps> = ({ onChange, value, animations }) => {
-  return (
-    <select name="aniamtions" onChange={onChange} value={value}>
-      {animations.map(({ id, title }) => (
-        <option key={id} value={title}>
-          {title}
-        </option>
-      ))}
-    </select>
-  );
-};
-
-interface ButtonProps {
-  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  title: string;
-  style?: React.CSSProperties;
-}
-
-const Button: React.FC<ButtonProps> = ({ onClick, title, style }) => {
-  const buttonStyle = {
-    display: "block",
-    margin: "10px auto",
-    ...(style ? style : {}),
-  };
-  return (
-    <button className="controls-button" style={buttonStyle} onClick={onClick}>
-      {title}
-    </button>
   );
 };
 
