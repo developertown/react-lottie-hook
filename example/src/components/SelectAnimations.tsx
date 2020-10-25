@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { AnimationConfigWithData } from "lottie-web";
-import { animationTable, Animation, AnimationTitle } from "../animations";
+import { animationTable, AnimationTitle } from "../animations";
 import LottieOption from "./LottieOption";
 
 interface SelectProps {

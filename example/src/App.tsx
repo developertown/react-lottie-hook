@@ -1,4 +1,4 @@
-import React, { useState, useCallback, MouseEvent } from "react";
+import React, { useState, useCallback } from "react";
 import { useLottie, Lottie, ClickAway, EventListener } from "react-lottie-hook";
 import {
   animationTable,

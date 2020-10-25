@@ -1,4 +1,9 @@
 {
   "private": true,
-  "workspaces": ["react-lottie-hook", "example"]
+  "workspaces": {
+    "packages": [
+      "react-lottie-hook",
+      "example"
+    ]
+  }
 }
