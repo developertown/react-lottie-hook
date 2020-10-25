@@ -1,6 +1,7 @@
 {
-  "name": "temp",
-  "version": "0.2.1",
+  "name": "react-lottie-hook-ts",
+  "description": "Example Repository for react-lottie-hook with ReactTS",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "@types/node": "^12.0.0",
