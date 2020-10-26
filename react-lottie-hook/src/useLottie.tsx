@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import lottie, { AnimationConfigWithData, AnimationItem, AnimationEventName } from "lottie-web";
+import lottie, { AnimationConfigWithData, AnimationItem, AnimationEventName, AnimationDirection } from "lottie-web";
 import {
   LottieAnimationItem,
   AnimationDispatch,
@@ -10,7 +10,7 @@ import {
   AnimationEventTypes,
   UseLottieState,
 } from "./types";
-import { object } from "./utils/common";
+import { array, boolean, number, object, string } from "./utils/common";
 
 export const useLottie = ({
   renderer = Renderer.html,
@@ -25,11 +25,34 @@ export const useLottie = ({
   const lottieRef = React.useRef<HTMLDivElement>(null);
   const [internalAnimationData, setInternalAnimationData] = useState(animationData);
   const [state, dispatch] = useState<LottieState>({
-    animationData: animationData,
-    isStopped: false,
+    animType: undefined,
+    animationID: undefined,
+    assets: [],
+    assetsPath: undefined,
+    autoloadSegments: false,
+    autoplay: false,
+    currentFrame: 0,
+    currentRawFrame: 0,
+    firstFrame: 0,
+    frameModifier: 0,
+    frameMult: 0,
+    frameRate: 0,
+    initialSegment: undefined,
     isPaused: false,
     isLoaded: false,
+    isSubframeEnabled: false,
+    loop: undefined,
+    name: undefined,
+    path: undefined,
+    playCount: 0,
     playDirection: 1,
+    playSpeed: 0,
+    segmentPos: 0,
+    segments: [],
+    timeCompleted: 0,
+    totalFrames: 0,
+    isStopped: false,
+    animationData: animationData,
   });
 
   const hasOwnProperty = useCallback(
@@ -142,18 +165,148 @@ export const useLottie = ({
     [animation],
   );
 
+  const setSpeed = useCallback(
+    (speed) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "setSpeed")) {
+        animation?.setSpeed(speed);
+        update({ playSpeed: speed });
+      }
+    },
+    [animation, hasOwnProperty],
+  );
+
+  const resize = useCallback(() => {
+    if (hasOwnProperty(animation as LottieAnimationItem, "resize")) {
+      animation?.resize();
+    }
+  }, [animation, hasOwnProperty]);
+
+  const goToAndPlay = useCallback(
+    (value, isFrame) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "goToAndPlay")) {
+        if (state.totalFrames && value > state.totalFrames) {
+          console.error(
+            `[goToAndPlay]: provided value ${value} exceeds animation total frames which is ${state.totalFrames}`,
+          );
+        }
+        animation?.goToAndPlay(value, isFrame);
+      }
+    },
+    [animation, hasOwnProperty, state.totalFrames],
+  );
+
+  const goToAndStop = useCallback(
+    (value, isFrame) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "goToAndStop")) {
+        if (state.totalFrames && value > state.totalFrames) {
+          console.error(
+            `[goToAndStop]: provided value ${value} exceeds animation total frames which is ${state.totalFrames}`,
+          );
+        }
+        animation?.goToAndStop(value, isFrame);
+      }
+    },
+    [animation, hasOwnProperty, state.totalFrames],
+  );
+
+  const setSubframe = useCallback(
+    (useSubFrames) => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "setSubframe")) {
+        animation?.setSubframe(useSubFrames);
+      }
+    },
+    [animation, hasOwnProperty],
+  );
+
+  const getDuration = useCallback(
+    (inFrames): number => {
+      if (hasOwnProperty(animation as LottieAnimationItem, "getDuration")) {
+        return animation?.getDuration(inFrames) as number;
+      }
+      return 0;
+    },
+    [animation, hasOwnProperty],
+  );
+
   const controls: AnimationDispatch = useMemo(
     () => ({
-      ...animation,
       play,
-      playSegments,
       stop,
       pause,
+      resize,
       destroy,
+      setSpeed,
+      getDuration,
+      setSubframe,
+      goToAndPlay,
+      goToAndStop,
+      playSegments,
       setDirection,
       selectAnimation,
     }),
-    [animation, play, playSegments, stop, pause, destroy, setDirection, selectAnimation],
+    [
+      play,
+      stop,
+      pause,
+      resize,
+      destroy,
+      setSpeed,
+      getDuration,
+      setSubframe,
+      goToAndPlay,
+      goToAndStop,
+      setDirection,
+      playSegments,
+      selectAnimation,
+    ],
+  );
+
+  const filterLottieState = useCallback(
+    (anim: LottieAnimationItem | LottieState) => {
+      const updates = {} as Partial<LottieState>;
+      if (string.isPopulated(anim.name)) updates.name = anim.name;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (string.isPopulated(anim.path)) updates.path = anim.path;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (array.isPopulated(anim.assets)) updates.assets = anim.assets;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (string.isPopulated(anim.animType)) updates.animType = anim.animType;
+      if (string.isPopulated(anim.assetsPath)) updates.assetsPath = anim.assetsPath;
+      if (string.isPopulated(anim.animationID)) updates.animationID = anim.animationID;
+      if (number.is(anim.frameMult)) updates.frameMult = anim.frameMult;
+      if (number.is(anim.frameRate)) updates.frameRate = anim.frameRate;
+      if (number.is(anim.playCount)) updates.playCount = anim.playCount;
+      if (number.is(anim.playSpeed)) updates.playSpeed = anim.playSpeed;
+      if (number.is(anim.firstFrame)) updates.firstFrame = anim.firstFrame;
+      if (number.is(anim.segmentPos)) updates.segmentPos = anim.segmentPos;
+      if (number.is(anim.totalFrames)) updates.totalFrames = anim.totalFrames;
+      if (number.is(anim.currentFrame)) updates.currentFrame = anim.currentFrame;
+      if (number.is(anim.timeCompleted)) updates.timeCompleted = anim.timeCompleted;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (number.is(anim.frameModifier)) updates.frameModifier = anim.frameModifier;
+      if (number.is(anim.playDirection)) updates.playDirection = anim.playDirection as AnimationDirection;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (number.is(anim.initialSegment)) updates.initialSegment = anim.initialSegment;
+      if (number.is(anim.currentRawFrame)) updates.currentRawFrame = anim.currentRawFrame;
+      // eslint-disable-next-line
+      // @ts-ignore
+      if (boolean.is(anim.autoloadSegments)) updates.autoloadSegments = anim.autoloadSegments;
+      if (boolean.is(anim.isSubframeEnabled)) updates.isSubframeEnabled = anim.isSubframeEnabled;
+      if (boolean.is(anim.isLoaded)) updates.isLoaded = anim.isLoaded;
+      if (boolean.is(anim.isPaused)) updates.isPaused = anim.isPaused;
+      if (boolean.is(anim.autoplay)) updates.autoplay = anim.autoplay;
+      if (boolean.is(anim.loop)) updates.loop = anim.loop;
+      if (array.isPopulated(anim.segments)) updates.segments = anim.segments;
+
+      updates.isStopped = state.isStopped;
+      return updates;
+    },
+    [state.isStopped],
   );
 
   useEffect(() => {
@@ -161,7 +314,9 @@ export const useLottie = ({
 
     registerEvents(anim, eventListeners);
 
-    update({ isLoaded: anim.isLoaded, isPaused: anim.isPaused });
+    const updates = filterLottieState(anim);
+    update(updates);
+
     setAnimation(anim);
 
     return (): void => {
@@ -194,7 +349,11 @@ export const useLottie = ({
       registerEvents(anim, eventListeners);
 
       setInternalAnimationData(state.animationData);
+
       setAnimation(anim);
+
+      const updates = filterLottieState(anim);
+      update(updates);
     }
   }, [
     animation,
@@ -205,6 +364,7 @@ export const useLottie = ({
     deRegisterEvents,
     animationConfig,
     registerEvents,
+    filterLottieState,
     autoplay,
     renderer,
     controls,
@@ -212,16 +372,7 @@ export const useLottie = ({
     loop,
   ]);
 
-  const { isStopped, isPaused, isLoaded, playDirection } = state;
+  const lottieState = filterLottieState(state);
 
-  return [
-    lottieRef,
-    {
-      isStopped,
-      isPaused,
-      isLoaded,
-      playDirection,
-    },
-    controls,
-  ];
+  return [lottieRef, lottieState, controls];
 };

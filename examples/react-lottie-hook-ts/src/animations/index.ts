@@ -5,9 +5,7 @@ import cuteGirl from "./cuteGirl.json";
 import winking from "./winking.json";
 import spinner from "./spinner.json";
 import rocket from "./rocket.json";
-import beatingheart from "./beating-heart.json";
 import twitterheart from "./twitter-heart.json";
-import play from "./play.json";
 import Maps from "./maps.json";
 
 export enum Animation {
@@ -16,8 +14,6 @@ export enum Animation {
   Spinner = "Spinner",
   Rocket = "Rocket",
   Twitter = "Twitter",
-  Play = "Play",
-  "Beating Heart" = "Beating Heart",
   "Hallowin Cat" = "Hallowin Cat",
   "Loving It" = "Loving It",
   "Hallowin Witch" = "Hallowin Witch",
@@ -35,10 +31,6 @@ export const animations = [
   {
     id: 0,
     title: Animation.Github,
-  },
-  {
-    id: 1,
-    title: Animation["Beating Heart"],
   },
   {
     id: 2,
@@ -69,10 +61,6 @@ export const animations = [
     title: Animation.Twitter,
   },
   {
-    id: 10,
-    title: Animation.Play,
-  },
-  {
     id: 11,
     title: Animation.Maps,
   },
@@ -83,11 +71,9 @@ export const animationTable = {
   [Animation.Rocket]: rocket,
   [Animation.Spinner]: spinner,
   [Animation.Twitter]: twitterheart,
-  [Animation.Play]: play,
   [Animation.Maps]: Maps,
   [Animation["Winking Emoji"]]: winking,
   [Animation["Hallowin Witch"]]: cuteGirl,
   [Animation["Loving It"]]: lovingit,
   [Animation["Hallowin Cat"]]: hallowinCat,
-  [Animation["Beating Heart"]]: beatingheart,
 };
