@@ -8,7 +8,7 @@
 
 Lottie react hook with runtime animation controls.
 
-examples: &middot; [github](https://github.com/developertown/react-lottie-hook/examples/react-lottie-hook-ts) &middot; [codesandbox](https://codesandbox.io/s/lottie-with-hooks-ft8dl) &middot;
+examples: &middot; [github](https://github.com/developertown/react-lottie-hook/tree/master/examples/react-lottie-hook-ts) &middot; [codesandbox](https://codesandbox.io/s/lottie-with-hooks-ft8dl) &middot;
 
 # Introduction
 Lottie is a library for the Web, Android and iOS that parses Adobe After Effects animations through a plugin called bodymovin and exported as JSON; rendering natively on each platform.
