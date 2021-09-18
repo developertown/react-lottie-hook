@@ -74,16 +74,16 @@
     "husky": "^6.0.0",
     "jest": "26.6.3",
     "jest-canvas-mock": "^2.3.1",
-    "lint-staged": "^11.0.0",
+    "lint-staged": "^11.1.2",
     "prettier": "^2.4.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-test-renderer": "^17.0.2",
     "rimraf": "^3.0.2",
-    "rollup": "^2.47.0",
+    "rollup": "^2.56.3",
     "rollup-plugin-clear": "^2.0.7",
     "ts-jest": "^26.5.6",
-    "typescript": "^4.2.4"
+    "typescript": "^4.4.3"
   },
   "husky": {
     "hooks": {
