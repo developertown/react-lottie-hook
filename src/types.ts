@@ -150,7 +150,7 @@ export enum Renderer {
 
 export type AnimationData = AnimationConfigWithPath | AnimationConfigWithData | Record<string, unknown>;
 
-export interface LottieConfig extends Omit<AnimationConfig, "container"> {
+export interface LottieConfig<T extends Renderer = Renderer.svg> extends Omit<AnimationConfig<T>, "container"> {
   title?: string;
   options?: LottieOptions;
   eventListeners?: EventListener;

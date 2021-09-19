@@ -12,15 +12,19 @@ import {
 } from "./types";
 import { array, boolean, number, object, string } from "./utils/common";
 
-export const useLottie = ({
-  renderer = Renderer.html,
+type UseLottie<T extends Renderer = Renderer.svg> = (
+  config: LottieConfig<T>,
+) => [React.MutableRefObject<HTMLDivElement | null>, UseLottieState, AnimationDispatch];
+
+export const useLottie: UseLottie = ({
+  renderer = Renderer.svg,
   loop = true,
   autoplay = true,
   rendererSettings = {},
   segments = [],
   animationData = {},
   eventListeners = {},
-}: LottieConfig): [React.MutableRefObject<HTMLDivElement | null>, UseLottieState, AnimationDispatch] => {
+}) => {
   const [animation, setAnimation] = useState<LottieAnimationItem | undefined>(undefined);
   const lottieRef = React.useRef<HTMLDivElement>(null);
   const [internalAnimationData, setInternalAnimationData] = useState(animationData);

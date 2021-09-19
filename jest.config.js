@@ -6,7 +6,7 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
   globals: {
     "ts-jest": {
-      isolatedModules: true,
+      compiler: "typescript"
     },
   },
 };

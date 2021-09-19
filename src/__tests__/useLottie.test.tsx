@@ -6,6 +6,7 @@ import { ClickAway } from "../ClickAway";
 
 import github from "./animations/github.json";
 import spinner from "./animations/spinner.json";
+import { Renderer } from "..";
 
 export enum Animation {
   Github = "Github",
@@ -43,7 +44,7 @@ const Component = () => {
   const [selected, setOnSelect] = useState<AnimationTitle>(Animation.Github);
 
   const [lottieRef, state, controls] = useLottie({
-    renderer: "svg",
+    renderer: Renderer.svg,
     rendererSettings: {
       preserveAspectRatio: "xMidYMid slice",
       progressiveLoad: false,
