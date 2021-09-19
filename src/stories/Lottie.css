@@ -1,0 +1,63 @@
+body {
+  background-color: #000;
+}
+
+.App {
+  text-align: center;
+  color: mediumseagreen;
+}
+
+.App-link {
+  color: mediumseagreen;
+}
+
+.controls {
+  width: 200px;
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.controls-button {
+  width: 13.55rem;
+  height: 2rem;
+  background-color: transparent;
+  border: 0.2rem solid mediumseagreen;
+  color: mediumseagreen;
+  font-weight: 700;
+}
+
+.change-animations {
+  background-color: transparent;
+}
+
+.change-animations-select {
+  width: 13rem;
+  height: 2rem;
+  border: 0.2rem solid mediumseagreen;
+  margin: 0 auto;
+  line-height: 1.9;
+  font-weight: 700;
+}
+
+.change-animations-list-container {
+  width: 30rem;
+  margin: 0 auto;
+  margin-top: 1rem;
+  border: 0.2rem solid;
+  width: fit-content;
+  padding: 1rem;
+}
+
+.change-animations-close {
+  float: right;
+  margin-top: -0.6rem;
+  margin-right: -0.6rem;
+}
+
+.change-animations-list {
+  display: flex;
+  justify-content: center;
+}
