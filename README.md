@@ -6,6 +6,12 @@
 [![React Version](https://img.shields.io/static/v1?label=react&message=17.0.0&color=informational)](https://github.com/facebook/react/blob/master/CHANGELOG.md)
 ![CI](https://github.com/developertown/react-lottie-hook/workflows/Continuous%20Integration/badge.svg?branch=master)
 
+### Deprecated
+
+I've moved the package to my personal github account [here](https://github.com/JaysQubeXon/react-lottie-hook).
+
+------------
+
 Lottie react hook with runtime animation controls.
 
 examples: &middot; [github](https://github.com/developertown/react-lottie-hook/tree/master/examples/react-lottie-hook-ts) &middot; [codesandbox](https://codesandbox.io/s/lottie-with-hooks-ft8dl) &middot;
